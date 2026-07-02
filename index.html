@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>KerMil — Beauty for the Culture</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:    #0D0D0D;
+      --deep:    #1A1A1A;
+      --card:    #222222;
+      --gold:    #C9A84C;
+      --gold-lt:  #E2C97E;
+      --blush:    #C4856A;
+      --cream:    #F5EFE6;
+      --muted:    #8A8A8A;
+      --white:    #FFFFFF;
+      --r: 16px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+    }
+    .logo span { color: var(--blush); font-style: italic; }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 24px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196,133,106,0.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 8vw, 5.5rem);
+      line-height: 1.08;
+      max-width: 780px;
+      margin-bottom: 24px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.15rem);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+    .btn-primary {
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 16px 36px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); }
+
+    .trust-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 56px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .trust-pill {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 50px;
+      padding: 8px 18px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SECTION ── */
+    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.2;
+      margin-bottom: 48px;
+    }
+
+    /* ── FEATURES ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--r);
+      padding: 32px 28px;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      border-color: rgba(201,168,76,0.35);
+      transform: translateY(-3px);
+    }
+    .feature-icon {
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      color: var(--cream);
+    }
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      margin: 0 24px;
+    }
+
+    /* ── QUESTIONNAIRE ── */
+    .form-wrap {
+      background: var(--deep);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 24px;
+      padding: clamp(28px, 5vw, 56px);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .form-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      margin-bottom: 8px;
+    }
+    .form-wrap .sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+
+    .form-group { margin-bottom: 24px; }
+    label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    input[type="text"], select {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px 16px;
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+    input[type="text"]::placeholder { color: var(--muted); }
+    input[type="text"]:focus, select:focus {
+      border-color: var(--gold);
+    }
+    select option { background: var(--deep); color: var(--white); }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .chip {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      color: var(--muted);
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--gold); color: var(--white); }
+    .chip.active {
+      background: rgba(201,168,76,0.15);
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
+
+    .section-divider {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blush);
+      margin: 32px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: rgba(196,133,106,0.25);
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 18px;
+      border-radius: 50px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 32px;
+      letter-spacing: 0.04em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-submit:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── RESULT ── */
+    #result-box {
+      display: none;
+      background: var(--card);
+      border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 20px;
+      padding: 36px;
+      margin-top: 32px;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      color: var(--cream);
+      white-space: pre-wrap;
+    }
+    #result-box h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .spinner {
+      display: none;
+      text-align: center;
+      padding: 24px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .spinner::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 32px;
+      border: 2px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 12px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.07);
+      text-align: center;
+      padding: 40px 24px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    footer .logo { font-size: 1.2rem; display: block; margin-bottom: 8px; }
+
+    /* ── ERROR ── */
+    .error-msg {
+      background: rgba(196,133,106,0.12);
+      border: 1px solid rgba(196,133,106,0.3);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--blush);
+      font-size: 0.88rem;
+      margin-top: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Ker<span>Mil</span></div>
+  <a href="#get-started">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">AI-Powered Beauty for the Culture</p>
+  <h1>Your skin. Your hair.<br/><em>Your routine.</em></h1>
+  <p class="hero-sub">
+    Budget-friendly beauty recommendations built specifically for Black skin and hair — natural, locs, relaxed, braids, and everything in between.
+  </p>
+  <a href="#get-started" class="btn-primary">Build My Routine ✨</a>
+
+  <div class="trust-row">
+    <div class="trust-pill">🖤 Made for the Culture</div>
+    <div class="trust-pill">💰 Budget-Friendly Picks</div>
+    <div class="trust-pill">✨ Powered by AI</div>
+    <div class="trust-pill">💇 Natural to Relaxed</div>
+  </div>
+</div>
+
+<hr class="divider"/>
+
+<!-- FEATURES -->
+<section>
+  <p class="section-label">What KerMil Does</p>
+  <h2 class="section-title">Beauty advice that actually gets you</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">💇🏾‍♀️</div>
+      <h3>All Hair Types Covered</h3>
+      <p>Natural 4c, locs, relaxed, braids, men's facial hair, bald head care — we see you all.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧴</div>
+      <h3>Skin That Glows</h3>
+      <p>Hyperpigmentation, ashy skin, acne, razor bumps — routines tuned for melanin-rich skin.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3>Budget-First</h3>
+      <p>Products that actually work, starting under $10. No bougie gatekeeping here.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🤖</div>
+      <h3>Truly Personalized</h3>
+      <p>Claude AI reads your full profile and writes a routine built only for you — not a generic template.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- QUESTIONNAIRE -->
+<section id="get-started">
+  <div class="form-wrap">
+    <h2>Build Your Routine ✨</h2>
+    <p class="sub">Answer a few quick questions and get your personalized hair & skin routine.</p>
+
+    <!-- NAME + GENDER -->
+    <div class="form-row">
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" placeholder="Enter your name"/>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender">
+          <option>Woman</option>
+          <option>Man</option>
+          <option>Non-binary / Other</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- HAIR -->
+    <div class="section-divider">💇 Hair Profile</div>
+
+    <div class="form-group">
+      <label for="hair_type">Hair Type</label>
+      <select id="hair_type">
+        <option>Natural (4a/4b/4c)</option>
+        <option>Natural (3a/3b/3c)</option>
+        <option>Locs / Dreadlocks</option>
+        <option>Relaxed</option>
+        <option>Braids / Protective styles</option>
+        <option>Men's Facial Hair</option>
+        <option>Bald Head Care</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Hair Concerns <span style="color:var(--muted);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+      <div class="chip-group" id="hair_concerns">
+        <div class="chip" data-value="Dryness">Dryness</div>
+        <div class="chip" data-value="Breakage">Breakage</div>
+        <div class="chip" data-value="Shrinkage">Shrinkage</div>
+        <div class="chip" data-value="Scalp itchiness">Scalp Itchiness</div>
+        <div class="chip" data-value="Dandruff">Dandruff</div>
+        <div class="chip" data-value="Slow growth">Slow Growth</div>
+        <div class="chip" data-value="Frizz">Frizz</div>
+        <div class="chip" data-value="Loc maintenance">Loc Maintenance</div>
+        <div class="chip" data-value="Edge care">Edge Care</div>
+        <div class="chip" data-value="Shine / moisture">Shine & Moisture</div>
+      </div>
+    </div>
+
+    <!-- SKIN -->
+    <div class="section-divider">🧴 Skin Profile</div>
+
+    <div class="form-group">
+      <label for="skin_type">Skin Type</label>
+      <select id="skin_type">
+        <option>Oily</option>
+        <option>Dry</option>
+        <option>Combination</option>
+        <option>Normal</option>
+        <option>Sensitive</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Skin Concerns <span style="color:var(--muted);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
+      <div class="chip-group" id="skin_concerns">
+        <div class="chip" data-value="Dark spots / hyperpigmentation">Dark Spots</div>
+        <div class="chip" data-value="Acne / breakouts">Acne</div>
+        <div class="chip" data-value="Uneven skin tone">Uneven Tone</div>
+        <div class="chip" data-value="Dullness">Dullness</div>
+        <div class="chip" data-value="Oiliness">Oiliness</div>
+        <div class="chip" data-value="Dryness / ashy skin">Ashy Skin</div>
+        <div class="chip" data-value="Fine lines">Fine Lines</div>
+        <div class="chip" data-value="Razor bumps">Razor Bumps</div>
+        <div class="chip" data-value="Sensitivity / irritation">Sensitivity</div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div class="section-divider">💰 Budget</div>
+
+    <div class="form-group">
+      <label for="budget">Budget Per Product</label>
+      <select id="budget">
+        <option>Under $10</option>
+        <option selected>Under $20</option>
+        <option>Under $30</option>
+        <option>$30–$50</option>
+        <option>No limit — just what works</option>
+      </select>
+    </div>
+
+    <div class="error-msg" id="error-msg"></div>
+
+    <button class="btn-submit" id="submit-btn" onclick="getRecommendations()">
+      ✨ Build My Personalized Routine
+    </button>
+
+    <div class="spinner" id="spinner">Building your personalized KerMil routine…</div>
+
+    <div id="result-box">
+      <h3 id="result-name"></h3>
+      <div id="result-content"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="logo">Ker<span style="color:var(--blush);font-style:italic">Mil</span></span>
+  Beauty for the Culture 🖤 &nbsp;·&nbsp; Powered by Claude AI
+</footer>
+
+<script>
+  // Chip toggle
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('active'));
+  });
+
+  function getSelected(groupId) {
+    return Array.from(document.querySelectorAll(`#${groupId} .chip.active`))
+      .map(c => c.dataset.value);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function clearError() {
+    document.getElementById('error-msg').style.display = 'none';
+  }
+
+  async function getRecommendations() {
+    clearError();
+
+    const name = document.getElementById('name').value.trim();
+    const gender = document.getElementById('gender').value;
+    const hair_type = document.getElementById('hair_type').value;
+    const skin_type = document.getElementById('skin_type').value;
+    const budget = document.getElementById('budget').value;
+    const hair_concerns = getSelected('hair_concerns');
+    const skin_concerns = getSelected('skin_concerns');
+
+    if (!name) return showError('Please enter your name so we can personalize your routine.');
+    if (!hair_concerns.length) return showError('Select at least one hair concern.');
+    if (!skin_concerns.length) return showError('Select at least one skin concern.');
+
+    const btn = document.getElementById('submit-btn');
+    const spinner = document.getElementById('spinner');
+    const resultBox = document.getElementById('result-box');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    const prompt = `You are KerMil, a warm, culturally fluent AI beauty advisor for the Black community.
+
+Customer Profile:
+- Name: ${name}
+- Gender: ${gender}
+- Hair Type: ${hair_type}
+- Hair Concerns: ${hair_concerns.join(', ')}
+- Skin Type: ${skin_type}
+- Skin Concerns: ${skin_concerns.join(', ')}
+- Budget: ${budget}
+
+Please provide:
+1. A personalized hair care routine (morning and night)
+2. A personalized skin care routine (morning and night)
+3. Specific product recommendations with prices
+4. Pro tips for their specific hair and skin type
+
+Keep recommendations budget-friendly and focused on products that work well for Black hair and skin tones. Speak directly to ${name} in a warm, affirming, culturally aware tone.`;
+
+    try {
+      const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      const data = await response.json();
+      const text = data.content?.[0]?.text || 'Something went wrong. Please try again.';
+
+      document.getElementById('result-name').textContent = `${name}'s Custom KerMil Routine ✨`;
+      document.getElementById('result-content').textContent = text;
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (err) {
+      showError('Something went wrong connecting to KerMil AI. Please try again.');
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+    }
+  }
+</script>
+</body>
+</html>
