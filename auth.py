@@ -22,10 +22,11 @@ def sign_up(name, age, email, phone_number, password):
             json={"email": email, "password": password}
         )
         data = res.json()
-        if "error" in data and data["error"]:
-            return {"success": False, "error": data.get("msg", "Signup failed")}
 
-        user_id = data["user"]["id"]
+        # Return full respone so we can see what supabase is sending
+        return {"success": False, "error": str(data)}
+    except Exception as e:
+        return{"success": False, "error": str(e)}
 
         # Save profile
         httpx.post(
