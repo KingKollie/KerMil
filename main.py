@@ -1,9 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from recommender import get_recommendation
+from auth import sign_up, sign_in
 import os
 
 load_dotenv()
@@ -11,7 +12,7 @@ load_dotenv()
 app = FastAPI(
     title="KerMil Skin Care & Hair API",
     description="AI-powered skin and hair care recommendations for the Black community",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -21,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ── MODELS ──
 class Profile(BaseModel):
     name: str
     gender: str
@@ -30,6 +32,39 @@ class Profile(BaseModel):
     skin_concerns: str
     budget: str
 
+class SignUpRequest(BaseModel):
+    name: str
+    age: int
+    email: str
+    phone_number: str
+    password: str
+
+class SignInRequest(BaseModel):
+    email: str
+    password: str
+
+# ── AUTH ENDPOINTS ──
+@app.post("/signup")
+def signup(request: SignUpRequest):
+    result = sign_up(
+        request.name,
+        request.age,
+        request.email,
+        request.phone_number,
+        request.password
+    )
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+@app.post("/signin")
+def signin(request: SignInRequest):
+    result = sign_in(request.email, request.password)
+    if not result["success"]:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+# ── RECOMMENDATION ENDPOINT ──
 @app.post("/recommend")
 def recommend(profile: Profile):
     result = get_recommendation(profile.dict())
