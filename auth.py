@@ -1,37 +1,44 @@
 import os
-from supabase import create_client, Client
+import httpx
 from dotenv import load_dotenv
 
 load_dotenv()
 
-url = os.getenv("SUPABASE_URL")
-key = os.getenv("SUPABASE_ANON_KEY")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
 
-supabase: Client = create_client(url, key)
+HEADERS = {
+    "apikey": SUPABASE_KEY,
+    "Authorization": f"Bearer {SUPABASE_KEY}",
+    "Content-Type": "application/json"
+}
 
 def sign_up(name, age, email, phone_number, password):
     try:
-        response = supabase.auth.sign_up({
-            "email": email,
-            "password": password,
-            "options": {
-                "data": {
-                    "name": name,
-                    "age": age,
-                    "phone_number": phone_number
-                }
+        # Create auth user
+        res = httpx.post(
+            f"{SUPABASE_URL}/auth/v1/signup",
+            headers=HEADERS,
+            json={"email": email, "password": password}
+        )
+        data = res.json()
+        if "error" in data and data["error"]:
+            return {"success": False, "error": data.get("msg", "Signup failed")}
+
+        user_id = data["user"]["id"]
+
+        # Save profile
+        httpx.post(
+            f"{SUPABASE_URL}/rest/v1/profiles",
+            headers={**HEADERS, "Prefer": "return=minimal"},
+            json={
+                "id": user_id,
+                "name": name,
+                "age": age,
+                "email": email,
+                "phone_number": phone_number
             }
-        })
-
-        user_id = response.user.id
-
-        supabase.table("profiles").insert({
-            "id": user_id,
-            "name": name,
-            "age": age,
-            "email": email,
-            "phone_number": phone_number
-        }).execute()
+        )
 
         return {"success": True, "user_id": user_id, "name": name}
 
@@ -41,15 +48,26 @@ def sign_up(name, age, email, phone_number, password):
 
 def sign_in(email, password):
     try:
-        response = supabase.auth.sign_in_with_password({
-            "email": email,
-            "password": password
-        })
+        res = httpx.post(
+            f"{SUPABASE_URL}/auth/v1/token?grant_type=password",
+            headers=HEADERS,
+            json={"email": email, "password": password}
+        )
+        data = res.json()
 
-        user_id = response.user.id
+        if "error" in data:
+            return {"success": False, "error": data.get("error_description", "Sign in failed")}
 
-        profile = supabase.table("profiles").select("*").eq("id", user_id).execute()
-        name = profile.data[0]["name"]
+        access_token = data["access_token"]
+        user_id = data["user"]["id"]
+
+        # Get profile
+        profile_res = httpx.get(
+            f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}&select=*",
+            headers={**HEADERS, "Authorization": f"Bearer {access_token}"}
+        )
+        profile_data = profile_res.json()
+        name = profile_data[0]["name"] if profile_data else "Friend"
 
         return {"success": True, "user_id": user_id, "name": name}
 
