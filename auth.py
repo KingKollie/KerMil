@@ -1,25 +1,30 @@
-from supabase import create_client
-from dotenv import load_dotenv
 import os
+from supabase import create_client, Client
+from dotenv import load_dotenv
 
 load_dotenv()
 
-supabase = create_client(
-    os.getenv("SUPABASE_URL"),
-    os.getenv("SUPABASE_ANON_KEY")
-)
+url = os.getenv("SUPABASE_URL")
+key = os.getenv("SUPABASE_ANON_KEY")
+
+supabase: Client = create_client(url, key)
 
 def sign_up(name, age, email, phone_number, password):
     try:
-        # Create auth account
         response = supabase.auth.sign_up({
             "email": email,
-            "password": password
+            "password": password,
+            "options": {
+                "data": {
+                    "name": name,
+                    "age": age,
+                    "phone_number": phone_number
+                }
+            }
         })
-       
+
         user_id = response.user.id
-       
-        # Save profile to profiles table
+
         supabase.table("profiles").insert({
             "id": user_id,
             "name": name,
@@ -27,9 +32,9 @@ def sign_up(name, age, email, phone_number, password):
             "email": email,
             "phone_number": phone_number
         }).execute()
-       
+
         return {"success": True, "user_id": user_id, "name": name}
-   
+
     except Exception as e:
         return {"success": False, "error": str(e)}
 
@@ -40,22 +45,13 @@ def sign_in(email, password):
             "email": email,
             "password": password
         })
-       
+
         user_id = response.user.id
-       
-        # Get their profile
+
         profile = supabase.table("profiles").select("*").eq("id", user_id).execute()
         name = profile.data[0]["name"]
-       
+
         return {"success": True, "user_id": user_id, "name": name}
-   
-    except Exception as e:
-        return {"success": False, "error": str(e)}
 
-
-def sign_out(jwt):
-    try:
-        supabase.auth.sign_out()
-        return {"success": True}
     except Exception as e:
         return {"success": False, "error": str(e)}
