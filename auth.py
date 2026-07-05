@@ -61,8 +61,8 @@ def sign_in(email, password):
         access_token = data["access_token"]
         user = data.get("user") or data.get("session", {}).get("user")
         if not user:
-            return {"success": False, "error": "Account may already exist. Try signing in."}
-        user_id = data["user"]["id"]
+            return {"success": False, "error": "Sign in failed. Please check your credentials."}
+        user_id = user["id"]
 
         # Get profile
         profile_res = httpx.get(
