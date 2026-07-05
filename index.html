@@ -1,463 +1,322 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>KerMil — Beauty for the Culture</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --black:    #0D0D0D;
-      --deep:    #1A1A1A;
-      --card:    #222222;
-      --gold:    #C9A84C;
-      --gold-lt:  #E2C97E;
-      --blush:    #C4856A;
-      --cream:    #F5EFE6;
-      --muted:    #8A8A8A;
-      --white:    #FFFFFF;
+      --black:  #0D0D0D;
+      --deep:  #1A1A1A;
+      --card:  #222222;
+      --gold:  #C9A84C;
+      --gold-lt:#E2C97E;
+      --blush:  #C4856A;
+      --cream:  #F5EFE6;
+      --muted:  #8A8A8A;
+      --white:  #FFFFFF;
       --r: 16px;
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--black);
-      color: var(--white);
-      min-height: 100vh;
-    }
-
-    /* ── NAV ── */
+    /* NAV */
     nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 20px 32px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(13,13,13,0.92);
-      backdrop-filter: blur(12px);
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 32px; position: sticky; top: 0; z-index: 100;
+      background: rgba(13,13,13,0.92); backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(201,168,76,0.15);
     }
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.6rem;
-      letter-spacing: 0.04em;
-      color: var(--gold);
-    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--gold); cursor: pointer; }
     .logo span { color: var(--blush); font-style: italic; }
-    nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 0.2s;
+    .nav-buttons { display: flex; gap: 12px; }
+    .btn-nav {
+      padding: 10px 22px; border-radius: 50px; font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500;
+      transition: all 0.2s; border: 1px solid rgba(201,168,76,0.4);
+      background: transparent; color: var(--gold);
     }
-    nav a:hover { color: var(--gold); }
+    .btn-nav:hover { background: rgba(201,168,76,0.1); }
+    .btn-nav.primary { background: var(--gold); color: var(--black); border-color: var(--gold); }
+    .btn-nav.primary:hover { background: var(--gold-lt); }
+    .btn-nav.danger { border-color: rgba(196,133,106,0.4); color: var(--blush); }
+    .btn-nav.danger:hover { background: rgba(196,133,106,0.1); }
 
-    /* ── HERO ── */
+    /* PAGES */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* HERO */
     .hero {
-      min-height: 88vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 60px 24px 40px;
-      position: relative;
-      overflow: hidden;
+      min-height: 88vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 60px 24px 40px; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
-        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196,133,106,0.10) 0%, transparent 60%);
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,168,76,0.12) 0%, transparent 70%),
+                  radial-gradient(ellipse 50% 40% at 80% 80%, rgba(196,133,106,0.10) 0%, transparent 60%);
       pointer-events: none;
     }
-    .hero-eyebrow {
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2.8rem, 8vw, 5.5rem);
-      line-height: 1.08;
-      max-width: 780px;
-      margin-bottom: 24px;
-    }
-    .hero h1 em {
-      font-style: italic;
-      color: var(--gold);
-    }
-    .hero-sub {
-      font-size: clamp(1rem, 2.5vw, 1.15rem);
-      color: var(--muted);
-      max-width: 520px;
-      line-height: 1.7;
-      margin-bottom: 40px;
-      font-weight: 300;
-    }
+    .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 8vw, 5.5rem); line-height: 1.08; max-width: 780px; margin-bottom: 24px; }
+    .hero h1 em { font-style: italic; color: var(--gold); }
+    .hero-sub { font-size: clamp(1rem, 2.5vw, 1.15rem); color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 40px; font-weight: 300; }
     .btn-primary {
-      background: var(--gold);
-      color: var(--black);
-      border: none;
-      padding: 16px 36px;
-      border-radius: 50px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      text-decoration: none;
-      display: inline-block;
+      background: var(--gold); color: var(--black); border: none;
+      padding: 16px 36px; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 500; cursor: pointer;
+      transition: background 0.2s, transform 0.15s; text-decoration: none; display: inline-block;
     }
     .btn-primary:hover { background: var(--gold-lt); transform: translateY(-2px); }
-
-    .trust-row {
-      display: flex;
-      gap: 32px;
-      margin-top: 56px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+    .trust-row { display: flex; gap: 32px; margin-top: 56px; flex-wrap: wrap; justify-content: center; }
     .trust-pill {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 50px;
-      padding: 8px 18px;
-      font-size: 0.8rem;
-      color: var(--muted);
-      letter-spacing: 0.04em;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 50px; padding: 8px 18px; font-size: 0.8rem; color: var(--muted);
     }
 
-    /* ── SECTION ── */
-    section { padding: 80px 24px; max-width: 1100px; margin: 0 auto; }
-
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 12px;
+    /* AUTH FORMS */
+    .auth-wrap {
+      min-height: 90vh; display: flex; align-items: center;
+      justify-content: center; padding: 40px 24px;
     }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      line-height: 1.2;
-      margin-bottom: 48px;
+    .auth-card {
+      background: var(--deep); border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 24px; padding: clamp(28px, 5vw, 48px);
+      width: 100%; max-width: 480px;
     }
-
-    /* ── FEATURES ── */
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+    .auth-card h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 6px; }
+    .auth-card .sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); margin-bottom: 8px; font-weight: 500; }
+    input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="tel"], select {
+      width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; padding: 14px 16px; color: var(--white);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none; transition: border-color 0.2s; appearance: none;
     }
-    .feature-card {
-      background: var(--card);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: var(--r);
-      padding: 32px 28px;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover {
-      border-color: rgba(201,168,76,0.35);
-      transform: translateY(-3px);
-    }
-    .feature-icon {
-      font-size: 1.8rem;
-      margin-bottom: 16px;
-    }
-    .feature-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.15rem;
-      margin-bottom: 10px;
-      color: var(--cream);
-    }
-    .feature-card p {
-      font-size: 0.88rem;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      margin: 0 24px;
-    }
-
-    /* ── QUESTIONNAIRE ── */
-    .form-wrap {
-      background: var(--deep);
-      border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 24px;
-      padding: clamp(28px, 5vw, 56px);
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .form-wrap h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-      margin-bottom: 8px;
-    }
-    .form-wrap .sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-      margin-bottom: 36px;
-    }
-
-    .form-group { margin-bottom: 24px; }
-    label {
-      display: block;
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-      font-weight: 500;
-    }
-    input[type="text"], select {
-      width: 100%;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 10px;
-      padding: 14px 16px;
-      color: var(--white);
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
-      appearance: none;
-    }
-    input[type="text"]::placeholder { color: var(--muted); }
-    input[type="text"]:focus, select:focus {
-      border-color: var(--gold);
-    }
+    input::placeholder { color: var(--muted); }
+    input:focus, select:focus { border-color: var(--gold); }
     select option { background: var(--deep); color: var(--white); }
-
-    .chip-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .chip {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 50px;
-      padding: 8px 16px;
-      font-size: 0.82rem;
-      cursor: pointer;
-      transition: all 0.18s;
-      color: var(--muted);
-      user-select: none;
-    }
-    .chip:hover { border-color: var(--gold); color: var(--white); }
-    .chip.active {
-      background: rgba(201,168,76,0.15);
-      border-color: var(--gold);
-      color: var(--gold);
-    }
-
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 560px) { .form-row { grid-template-columns: 1fr; } }
 
-    .section-divider {
-      font-size: 0.7rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--blush);
-      margin: 32px 0 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .section-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: rgba(196,133,106,0.25);
-    }
-
     .btn-submit {
-      width: 100%;
-      background: var(--gold);
-      color: var(--black);
-      border: none;
-      padding: 18px;
-      border-radius: 50px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 500;
-      cursor: pointer;
-      margin-top: 32px;
-      letter-spacing: 0.04em;
+      width: 100%; background: var(--gold); color: var(--black); border: none;
+      padding: 16px; border-radius: 50px; font-family: 'DM Sans', sans-serif;
+      font-size: 1rem; font-weight: 500; cursor: pointer; margin-top: 24px;
       transition: background 0.2s, transform 0.15s;
     }
     .btn-submit:hover { background: var(--gold-lt); transform: translateY(-2px); }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-    /* ── RESULT ── */
-    #result-box {
-      display: none;
-      background: var(--card);
-      border: 1px solid rgba(201,168,76,0.25);
-      border-radius: 20px;
-      padding: 36px;
-      margin-top: 32px;
-      line-height: 1.8;
-      font-size: 0.95rem;
-      color: var(--cream);
-      white-space: pre-wrap;
+    .auth-switch { text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--muted); }
+    .auth-switch a { color: var(--gold); cursor: pointer; text-decoration: none; }
+    .auth-switch a:hover { color: var(--gold-lt); }
+
+    .error-msg {
+      background: rgba(196,133,106,0.12); border: 1px solid rgba(196,133,106,0.3);
+      border-radius: 10px; padding: 12px 16px; color: var(--blush);
+      font-size: 0.88rem; margin-top: 16px; display: none;
     }
-    #result-box h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--gold);
-      margin-bottom: 16px;
+    .success-msg {
+      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 10px; padding: 12px 16px; color: var(--gold);
+      font-size: 0.88rem; margin-top: 16px; display: none;
     }
 
-    .spinner {
-      display: none;
-      text-align: center;
-      padding: 24px;
-      color: var(--muted);
-      font-size: 0.9rem;
+    /* DASHBOARD */
+    .dashboard { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+    .welcome-banner {
+      background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(196,133,106,0.1));
+      border: 1px solid rgba(201,168,76,0.25); border-radius: 20px;
+      padding: 32px; margin-bottom: 40px;
     }
+    .welcome-banner h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 8px; }
+    .welcome-banner p { color: var(--muted); font-size: 0.95rem; }
+
+    .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .dash-card {
+      background: var(--card); border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--r); padding: 28px; cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .dash-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); }
+    .dash-card .icon { font-size: 2rem; margin-bottom: 12px; }
+    .dash-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 8px; }
+    .dash-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ROUTINE BUILDER */
+    .section-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
+    .section-wrap h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 8px; }
+    .section-wrap .sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
+
+    .chip-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 50px; padding: 8px 16px; font-size: 0.82rem;
+      cursor: pointer; transition: all 0.18s; color: var(--muted); user-select: none;
+    }
+    .chip:hover { border-color: var(--gold); color: var(--white); }
+    .chip.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
+    .section-divider {
+      font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--blush); margin: 28px 0 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .section-divider::after { content: ''; flex: 1; height: 1px; background: rgba(196,133,106,0.25); }
+
+    /* RESULT */
+    .result-box {
+      display: none; background: var(--card); border: 1px solid rgba(201,168,76,0.25);
+      border-radius: 20px; padding: 36px; margin-top: 32px;
+      line-height: 1.8; font-size: 0.95rem; color: var(--cream); white-space: pre-wrap;
+    }
+    .result-box h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--gold); margin-bottom: 16px; }
+
+    .spinner { display: none; text-align: center; padding: 24px; color: var(--muted); font-size: 0.9rem; }
     .spinner::before {
-      content: '';
-      display: block;
-      width: 32px;
-      height: 32px;
-      border: 2px solid rgba(201,168,76,0.2);
-      border-top-color: var(--gold);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto 12px;
+      content: ''; display: block; width: 32px; height: 32px;
+      border: 2px solid rgba(201,168,76,0.2); border-top-color: var(--gold);
+      border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid rgba(255,255,255,0.07);
-      text-align: center;
-      padding: 40px 24px;
-      color: var(--muted);
-      font-size: 0.82rem;
+    .back-btn {
+      background: transparent; border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted); padding: 10px 20px; border-radius: 50px;
+      cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      margin-bottom: 32px; transition: all 0.2s;
     }
-    footer .logo { font-size: 1.2rem; display: block; margin-bottom: 8px; }
+    .back-btn:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* ── ERROR ── */
-    .error-msg {
-      background: rgba(196,133,106,0.12);
-      border: 1px solid rgba(196,133,106,0.3);
-      border-radius: 10px;
-      padding: 12px 16px;
-      color: var(--blush);
-      font-size: 0.88rem;
-      margin-top: 16px;
-      display: none;
-    }
+    /* FOOTER */
+    footer { border-top: 1px solid rgba(255,255,255,0.07); text-align: center; padding: 40px 24px; color: var(--muted); font-size: 0.82rem; }
   </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="logo">Ker<span>Mil</span></div>
-  <a href="#get-started">Get Started</a>
+  <div class="logo" onclick="goHome()">Ker<span>Mil</span></div>
+  <div class="nav-buttons" id="nav-buttons">
+    <button class="btn-nav" onclick="showPage('signin')">Sign In</button>
+    <button class="btn-nav primary" onclick="showPage('signup')">Sign Up</button>
+  </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <p class="hero-eyebrow">AI-Powered Beauty for the Culture</p>
-  <h1>Your skin. Your hair.<br/><em>Your routine.</em></h1>
-  <p class="hero-sub">
-    Budget-friendly beauty recommendations built specifically for Black skin and hair — natural, locs, relaxed, braids, and everything in between.
-  </p>
-  <a href="#get-started" class="btn-primary">Build My Routine ✨</a>
-
-  <div class="trust-row">
-    <div class="trust-pill">🖤 Made for the Culture</div>
-    <div class="trust-pill">💰 Budget-Friendly Picks</div>
-    <div class="trust-pill">✨ Powered by AI</div>
-    <div class="trust-pill">💇 Natural to Relaxed</div>
+<!-- HOME PAGE -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <p class="hero-eyebrow">AI-Powered Beauty for the Culture</p>
+    <h1>Your skin. Your hair.<br/><em>Your routine.</em></h1>
+    <p class="hero-sub">Budget-friendly beauty recommendations built specifically for Black skin and hair — natural, locs, relaxed, braids, and everything in between.</p>
+    <button class="btn-primary" onclick="showPage('signup')">Get Started ✨</button>
+    <div class="trust-row">
+      <div class="trust-pill">🖤 Made for the Culture</div>
+      <div class="trust-pill">💰 Budget-Friendly Picks</div>
+      <div class="trust-pill">✨ Powered by AI</div>
+      <div class="trust-pill">💇 Natural to Relaxed</div>
+    </div>
   </div>
 </div>
 
-<hr class="divider"/>
+<!-- SIGN UP PAGE -->
+<div id="page-signup" class="page">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>Join KerMil ✨</h2>
+      <p class="sub">Create your free account and get your personalized beauty routine.</p>
 
-<!-- FEATURES -->
-<section>
-  <p class="section-label">What KerMil Does</p>
-  <h2 class="section-title">Beauty advice that actually gets you</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <div class="feature-icon">💇🏾‍♀️</div>
-      <h3>All Hair Types Covered</h3>
-      <p>Natural 4c, locs, relaxed, braids, men's facial hair, bald head care — we see you all.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🧴</div>
-      <h3>Skin That Glows</h3>
-      <p>Hyperpigmentation, ashy skin, acne, razor bumps — routines tuned for melanin-rich skin.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💰</div>
-      <h3>Budget-First</h3>
-      <p>Products that actually work, starting under $10. No bougie gatekeeping here.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🤖</div>
-      <h3>Truly Personalized</h3>
-      <p>Claude AI reads your full profile and writes a routine built only for you — not a generic template.</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="signup-name" placeholder="Your name"/>
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" id="signup-age" placeholder="Your age"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" id="signup-email" placeholder="you@email.com"/>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="tel" id="signup-phone" placeholder="+1 (555) 000-0000"/>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Create a strong password"/>
+      </div>
+
+      <div class="error-msg" id="signup-error"></div>
+      <div class="success-msg" id="signup-success"></div>
+
+      <button class="btn-submit" onclick="handleSignUp()">Create My Account</button>
+      <p class="auth-switch">Already have an account? <a onclick="showPage('signin')">Sign in</a></p>
     </div>
   </div>
-</section>
+</div>
 
-<hr class="divider"/>
+<!-- SIGN IN PAGE -->
+<div id="page-signin" class="page">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>Welcome Back 🖤</h2>
+      <p class="sub">Sign in to access your personalized KerMil routine.</p>
 
-<!-- QUESTIONNAIRE -->
-<section id="get-started">
-  <div class="form-wrap">
-    <h2>Build Your Routine ✨</h2>
-    <p class="sub">Answer a few quick questions and get your personalized hair & skin routine.</p>
-
-    <!-- NAME + GENDER -->
-    <div class="form-row">
       <div class="form-group">
-        <label for="name">Your Name</label>
-        <input type="text" id="name" placeholder="Enter your name"/>
+        <label>Email Address</label>
+        <input type="email" id="signin-email" placeholder="you@email.com"/>
       </div>
       <div class="form-group">
-        <label for="gender">Gender</label>
-        <select id="gender">
-          <option>Woman</option>
-          <option>Man</option>
-          <option>Non-binary / Other</option>
-        </select>
+        <label>Password</label>
+        <input type="password" id="signin-password" placeholder="Your password"/>
+      </div>
+
+      <div class="error-msg" id="signin-error"></div>
+
+      <button class="btn-submit" onclick="handleSignIn()">Sign In</button>
+      <p class="auth-switch">Don't have an account? <a onclick="showPage('signup')">Sign up free</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard">
+    <div class="welcome-banner">
+      <h2 id="welcome-name">Welcome back! 👑</h2>
+      <p>Choose a routine below to get started or build a new one.</p>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dash-card" onclick="showPage('hair-routine')">
+        <div class="icon">💇🏾‍♀️</div>
+        <h3>Hair Routine</h3>
+        <p>Get your personalized daily and weekly hair care routine powered by AI.</p>
+      </div>
+      <div class="dash-card" onclick="showPage('skin-routine')">
+        <div class="icon">🧴</div>
+        <h3>Skin Routine</h3>
+        <p>Get your personalized daily and weekly skin care routine powered by AI.</p>
       </div>
     </div>
+  </div>
+</div>
 
-    <!-- HAIR -->
-    <div class="section-divider">💇 Hair Profile</div>
+<!-- HAIR ROUTINE PAGE -->
+<div id="page-hair-routine" class="page">
+  <div class="section-wrap">
+    <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
+    <h2>💇🏾‍♀️ Hair Routine Builder</h2>
+    <p class="sub">Tell us about your hair and we'll build your personalized routine.</p>
 
     <div class="form-group">
-      <label for="hair_type">Hair Type</label>
-      <select id="hair_type">
+      <label>Hair Type</label>
+      <select id="hair-type">
         <option>Natural (4a/4b/4c)</option>
         <option>Natural (3a/3b/3c)</option>
         <option>Locs / Dreadlocks</option>
@@ -469,8 +328,8 @@
     </div>
 
     <div class="form-group">
-      <label>Hair Concerns <span style="color:var(--muted);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
-      <div class="chip-group" id="hair_concerns">
+      <label>Hair Concerns</label>
+      <div class="chip-group" id="hair-concerns">
         <div class="chip" data-value="Dryness">Dryness</div>
         <div class="chip" data-value="Breakage">Breakage</div>
         <div class="chip" data-value="Shrinkage">Shrinkage</div>
@@ -484,12 +343,37 @@
       </div>
     </div>
 
-    <!-- SKIN -->
-    <div class="section-divider">🧴 Skin Profile</div>
+    <div class="form-group">
+      <label>Budget Per Product</label>
+      <select id="hair-budget">
+        <option>Under $10</option>
+        <option selected>Under $20</option>
+        <option>Under $30</option>
+        <option>$30–$50</option>
+        <option>No limit — just what works</option>
+      </select>
+    </div>
+
+    <div class="error-msg" id="hair-error"></div>
+    <button class="btn-submit" onclick="getHairRoutine()">✨ Build My Hair Routine</button>
+    <div class="spinner" id="hair-spinner">Building your hair routine…</div>
+    <div class="result-box" id="hair-result">
+      <h3 id="hair-result-title"></h3>
+      <div id="hair-result-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SKIN ROUTINE PAGE -->
+<div id="page-skin-routine" class="page">
+  <div class="section-wrap">
+    <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
+    <h2>🧴 Skin Routine Builder</h2>
+    <p class="sub">Tell us about your skin and we'll build your personalized routine.</p>
 
     <div class="form-group">
-      <label for="skin_type">Skin Type</label>
-      <select id="skin_type">
+      <label>Skin Type</label>
+      <select id="skin-type">
         <option>Oily</option>
         <option>Dry</option>
         <option>Combination</option>
@@ -499,8 +383,8 @@
     </div>
 
     <div class="form-group">
-      <label>Skin Concerns <span style="color:var(--muted);text-transform:none;letter-spacing:0">(select all that apply)</span></label>
-      <div class="chip-group" id="skin_concerns">
+      <label>Skin Concerns</label>
+      <div class="chip-group" id="skin-concerns">
         <div class="chip" data-value="Dark spots / hyperpigmentation">Dark Spots</div>
         <div class="chip" data-value="Acne / breakouts">Acne</div>
         <div class="chip" data-value="Uneven skin tone">Uneven Tone</div>
@@ -513,12 +397,9 @@
       </div>
     </div>
 
-    <!-- BUDGET -->
-    <div class="section-divider">💰 Budget</div>
-
     <div class="form-group">
-      <label for="budget">Budget Per Product</label>
-      <select id="budget">
+      <label>Budget Per Product</label>
+      <select id="skin-budget">
         <option>Under $10</option>
         <option selected>Under $20</option>
         <option>Under $30</option>
@@ -527,29 +408,58 @@
       </select>
     </div>
 
-    <div class="error-msg" id="error-msg"></div>
-
-    <button class="btn-submit" id="submit-btn" onclick="getRecommendations()">
-      ✨ Build My Personalized Routine
-    </button>
-
-    <div class="spinner" id="spinner">Building your personalized KerMil routine…</div>
-
-    <div id="result-box">
-      <h3 id="result-name"></h3>
-      <div id="result-content"></div>
+    <div class="error-msg" id="skin-error"></div>
+    <button class="btn-submit" onclick="getSkinRoutine()">✨ Build My Skin Routine</button>
+    <div class="spinner" id="skin-spinner">Building your skin routine…</div>
+    <div class="result-box" id="skin-result">
+      <h3 id="skin-result-title"></h3>
+      <div id="skin-result-content"></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
 <footer>
-  <span class="logo">Ker<span style="color:var(--blush);font-style:italic">Mil</span></span>
-  Beauty for the Culture 🖤 &nbsp;·&nbsp; Powered by Claude AI
+  <div style="font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--gold);margin-bottom:8px;">
+    Ker<span style="color:var(--blush);font-style:italic">Mil</span>
+  </div>
+  Beauty for the Culture 🖤 · Powered by Claude AI
 </footer>
 
 <script>
-  // Chip toggle
+  // ── STATE ──
+  let currentUser = null;
+
+  // ── NAVIGATION ──
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + pageId).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function goHome() {
+    if (currentUser) {
+      showPage('dashboard');
+    } else {
+      showPage('home');
+    }
+  }
+
+  function updateNav() {
+    const nav = document.getElementById('nav-buttons');
+    if (currentUser) {
+      nav.innerHTML = `
+        <span style="color:var(--muted);font-size:0.85rem;padding:10px 0;">👑 ${currentUser.name}</span>
+        <button class="btn-nav danger" onclick="handleSignOut()">Sign Out</button>
+      `;
+    } else {
+      nav.innerHTML = `
+        <button class="btn-nav" onclick="showPage('signin')">Sign In</button>
+        <button class="btn-nav primary" onclick="showPage('signup')">Sign Up</button>
+      `;
+    }
+  }
+
+  // ── CHIP TOGGLE ──
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => chip.classList.toggle('active'));
   });
@@ -559,82 +469,184 @@
       .map(c => c.dataset.value);
   }
 
-  function showError(msg) {
-    const el = document.getElementById('error-msg');
+  function showError(id, msg) {
+    const el = document.getElementById(id);
     el.textContent = msg;
     el.style.display = 'block';
   }
-  function clearError() {
-    document.getElementById('error-msg').style.display = 'none';
+  function clearError(id) {
+    document.getElementById(id).style.display = 'none';
+  }
+  function showSuccess(id, msg) {
+    const el = document.getElementById(id);
+    el.textContent = msg;
+    el.style.display = 'block';
   }
 
-  async function getRecommendations() {
-    clearError();
+  // ── SIGN UP ──
+  async function handleSignUp() {
+    clearError('signup-error');
+    document.getElementById('signup-success').style.display = 'none';
 
-    const name = document.getElementById('name').value.trim();
-    const gender = document.getElementById('gender').value;
-    const hair_type = document.getElementById('hair_type').value;
-    const skin_type = document.getElementById('skin_type').value;
-    const budget = document.getElementById('budget').value;
-    const hair_concerns = getSelected('hair_concerns');
-    const skin_concerns = getSelected('skin_concerns');
+    const name = document.getElementById('signup-name').value.trim();
+    const age = document.getElementById('signup-age').value.trim();
+    const email = document.getElementById('signup-email').value.trim();
+    const phone_number = document.getElementById('signup-phone').value.trim();
+    const password = document.getElementById('signup-password').value;
 
-    if (!name) return showError('Please enter your name so we can personalize your routine.');
-    if (!hair_concerns.length) return showError('Select at least one hair concern.');
-    if (!skin_concerns.length) return showError('Select at least one skin concern.');
+    if (!name || !age || !email || !phone_number || !password)
+      return showError('signup-error', 'Please fill in all fields.');
+    if (password.length < 6)
+      return showError('signup-error', 'Password must be at least 6 characters.');
 
-    const btn = document.getElementById('submit-btn');
-    const spinner = document.getElementById('spinner');
-    const resultBox = document.getElementById('result-box');
+    const btn = document.querySelector('#page-signup .btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Creating your account…';
+
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, age: parseInt(age), email, phone_number, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Signup failed');
+
+      showSuccess('signup-success', '✅ Account created! Please check your email to confirm, then sign in.');
+      btn.textContent = 'Create My Account';
+      btn.disabled = false;
+    } catch (err) {
+      showError('signup-error', err.message);
+      btn.textContent = 'Create My Account';
+      btn.disabled = false;
+    }
+  }
+
+  // ── SIGN IN ──
+  async function handleSignIn() {
+    clearError('signin-error');
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+
+    if (!email || !password)
+      return showError('signin-error', 'Please enter your email and password.');
+
+    const btn = document.querySelector('#page-signin .btn-submit');
+    btn.disabled = true;
+    btn.textContent = 'Signing in…';
+
+    try {
+      const res = await fetch('/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Sign in failed');
+
+      currentUser = { name: data.name, user_id: data.user_id };
+      updateNav();
+      document.getElementById('welcome-name').textContent = `Welcome back, ${data.name}! 👑`;
+      showPage('dashboard');
+    } catch (err) {
+      showError('signin-error', err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Sign In';
+    }
+  }
+
+  // ── SIGN OUT ──
+  function handleSignOut() {
+    currentUser = null;
+    updateNav();
+    showPage('home');
+  }
+
+  // ── HAIR ROUTINE ──
+  async function getHairRoutine() {
+    clearError('hair-error');
+    const hair_type = document.getElementById('hair-type').value;
+    const hair_concerns = getSelected('hair-concerns');
+    const budget = document.getElementById('hair-budget').value;
+
+    if (!hair_concerns.length)
+      return showError('hair-error', 'Please select at least one hair concern.');
+
+    const btn = document.querySelector('#page-hair-routine .btn-submit');
+    const spinner = document.getElementById('hair-spinner');
+    const resultBox = document.getElementById('hair-result');
 
     btn.disabled = true;
     spinner.style.display = 'block';
     resultBox.style.display = 'none';
 
-    const prompt = `You are KerMil, a warm, culturally fluent AI beauty advisor for the Black community.
-
-Customer Profile:
-- Name: ${name}
-- Gender: ${gender}
-- Hair Type: ${hair_type}
-- Hair Concerns: ${hair_concerns.join(', ')}
-- Skin Type: ${skin_type}
-- Skin Concerns: ${skin_concerns.join(', ')}
-- Budget: ${budget}
-
-Please provide:
-1. A personalized hair care routine (morning and night)
-2. A personalized skin care routine (morning and night)
-3. Specific product recommendations with prices
-4. Pro tips for their specific hair and skin type
-
-Keep recommendations budget-friendly and focused on products that work well for Black hair and skin tones. Speak directly to ${name} in a warm, affirming, culturally aware tone.`;
-
     try {
-      const response = await fetch('/recommend', {
+      const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: name,
-          gender: gender,
-          hair_type: hair_type,
+          name: currentUser?.name || 'Friend',
+          gender: 'Not specified',
+          hair_type,
           hair_concerns: hair_concerns.join(', '),
-          skin_type: skin_type,
-          skin_concerns: skin_concerns.join(', '),
-          budget: budget
+          skin_type: 'Not specified',
+          skin_concerns: 'Not specified',
+          budget
         })
       });
-
-      const data = await response.json();
-      const text = data.recommendation || 'Something went wrong. Please try again.';
-
-      document.getElementById('result-name').textContent = `${name}'s Custom KerMil Routine ✨`;
-      document.getElementById('result-content').textContent = text;
+      const data = await res.json();
+      document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
+      document.getElementById('hair-result-content').textContent = data.recommendation;
       resultBox.style.display = 'block';
-      resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+      resultBox.scrollIntoView({ behavior: 'smooth' });
     } catch (err) {
-      showError('Something went wrong connecting to KerMil AI. Please try again.');
+      showError('hair-error', 'Something went wrong. Please try again.');
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
+    }
+  }
+
+  // ── SKIN ROUTINE ──
+  async function getSkinRoutine() {
+    clearError('skin-error');
+    const skin_type = document.getElementById('skin-type').value;
+    const skin_concerns = getSelected('skin-concerns');
+    const budget = document.getElementById('skin-budget').value;
+
+    if (!skin_concerns.length)
+      return showError('skin-error', 'Please select at least one skin concern.');
+
+    const btn = document.querySelector('#page-skin-routine .btn-submit');
+    const spinner = document.getElementById('skin-spinner');
+    const resultBox = document.getElementById('skin-result');
+
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    resultBox.style.display = 'none';
+
+    try {
+      const res = await fetch('/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: currentUser?.name || 'Friend',
+          gender: 'Not specified',
+          hair_type: 'Not specified',
+          hair_concerns: 'Not specified',
+          skin_type,
+          skin_concerns: skin_concerns.join(', '),
+          budget
+        })
+      });
+      const data = await res.json();
+      document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
+      document.getElementById('skin-result-content').textContent = data.recommendation;
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      showError('skin-error', 'Something went wrong. Please try again.');
     } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
