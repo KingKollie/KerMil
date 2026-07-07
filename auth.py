@@ -46,7 +46,6 @@ def sign_up(name, age, email, phone_number, password):
     except Exception as e:
         return {"success": False, "error": str(e)}
 
-
 def sign_in(email, password):
     try:
         res = httpx.post(
@@ -56,13 +55,11 @@ def sign_in(email, password):
         )
         data = res.json()
 
-        # Debug - remove later
-        if "access_token" not in data:
-            return {"success": False, "error": str(data)}
+        if "error" in data:
+            return {"success": False, "error": data.get("error_description", "Sign in failed")}
 
         access_token = data["access_token"]
-        user = data.get("user", {})
-        user_id = user.get("id")
+        user_id = data["user"]["id"]
 
         # Get profile
         profile_res = httpx.get(
