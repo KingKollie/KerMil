@@ -59,15 +59,23 @@ def sign_in(email, password):
             return {"success": False, "error": data.get("error_description", "Sign in failed")}
 
         access_token = data["access_token"]
-        user_id = data["user"]["id"]
-
-        # Get profile
-        profile_res = httpx.get(
-            f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}&select=*",
-            headers={**HEADERS, "Authorization": f"Bearer {access_token}"}
-        )
-        profile_data = profile_res.json()
-        name = profile_data[0]["name"] if profile_data else "Friend"
+        user = data["user"]
+        user_id = user["id"]
+       
+        # Get name from user metadata first
+        name = user.get("user_metadata", {}).get("name", "")
+       
+        # Try profile table if no name in metadata
+        if not name:
+            profile_res = httpx.get(
+                f"{SUPABASE_URL}/rest/v1/profiles?id=eq.{user_id}&select=*",
+                headers={**HEADERS, "Authorization": f"Bearer {access_token}"}
+            )
+            profile_data = profile_res.json()
+            if isinstance(profile_data, list) and len(profile_data) > 0:
+                name = profile_data[0].get("name", "Friend")
+            else:
+                name = email.split("@")[0]
 
         return {"success": True, "user_id": user_id, "name": name}
 
