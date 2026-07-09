@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
@@ -22,7 +22,6 @@
     html { scroll-behavior: smooth; }
     body { font-family: 'DM Sans', sans-serif; background: var(--black); color: var(--white); min-height: 100vh; }
 
-    /* NAV */
     nav {
       display: flex; justify-content: space-between; align-items: center;
       padding: 20px 32px; position: sticky; top: 0; z-index: 100;
@@ -44,11 +43,9 @@
     .btn-nav.danger { border-color: rgba(196,133,106,0.4); color: var(--blush); }
     .btn-nav.danger:hover { background: rgba(196,133,106,0.1); }
 
-    /* PAGES */
     .page { display: none; }
     .page.active { display: block; }
 
-    /* HERO */
     .hero {
       min-height: 88vh; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -77,7 +74,6 @@
       border-radius: 50px; padding: 8px 18px; font-size: 0.8rem; color: var(--muted);
     }
 
-    /* AUTH FORMS */
     .auth-wrap {
       min-height: 90vh; display: flex; align-items: center;
       justify-content: center; padding: 40px 24px;
@@ -120,13 +116,7 @@
       border-radius: 10px; padding: 12px 16px; color: var(--blush);
       font-size: 0.88rem; margin-top: 16px; display: none;
     }
-    .success-msg {
-      background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.3);
-      border-radius: 10px; padding: 12px 16px; color: var(--gold);
-      font-size: 0.88rem; margin-top: 16px; display: none;
-    }
 
-    /* DASHBOARD */
     .dashboard { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
     .welcome-banner {
       background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(196,133,106,0.1));
@@ -147,7 +137,6 @@
     .dash-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 8px; }
     .dash-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
 
-    /* ROUTINE BUILDER */
     .section-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px; }
     .section-wrap h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 8px; }
     .section-wrap .sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 32px; }
@@ -167,7 +156,6 @@
     }
     .section-divider::after { content: ''; flex: 1; height: 1px; background: rgba(196,133,106,0.25); }
 
-    /* RESULT */
     .result-box {
       display: none; background: var(--card); border: 1px solid rgba(201,168,76,0.25);
       border-radius: 20px; padding: 36px; margin-top: 32px;
@@ -191,13 +179,11 @@
     }
     .back-btn:hover { border-color: var(--gold); color: var(--gold); }
 
-    /* FOOTER */
     footer { border-top: 1px solid rgba(255,255,255,0.07); text-align: center; padding: 40px 24px; color: var(--muted); font-size: 0.82rem; }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <div class="logo" onclick="goHome()">Ker<span>Mil</span></div>
   <div class="nav-buttons" id="nav-buttons">
@@ -206,7 +192,6 @@
   </div>
 </nav>
 
-<!-- HOME PAGE -->
 <div id="page-home" class="page active">
   <div class="hero">
     <p class="hero-eyebrow">AI-Powered Beauty for the Culture</p>
@@ -222,7 +207,6 @@
   </div>
 </div>
 
-<!-- SIGN UP PAGE -->
 <div id="page-signup" class="page">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -253,15 +237,12 @@
       </div>
 
       <div class="error-msg" id="signup-error"></div>
-      <div class="success-msg" id="signup-success"></div>
-
       <button class="btn-submit" onclick="handleSignUp()">Create My Account</button>
       <p class="auth-switch">Already have an account? <a onclick="showPage('signin')">Sign in</a></p>
     </div>
   </div>
 </div>
 
-<!-- SIGN IN PAGE -->
 <div id="page-signin" class="page">
   <div class="auth-wrap">
     <div class="auth-card">
@@ -278,14 +259,12 @@
       </div>
 
       <div class="error-msg" id="signin-error"></div>
-
       <button class="btn-submit" onclick="handleSignIn()">Sign In</button>
       <p class="auth-switch">Don't have an account? <a onclick="showPage('signup')">Sign up free</a></p>
     </div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
 <div id="page-dashboard" class="page">
   <div class="dashboard">
     <div class="welcome-banner">
@@ -307,7 +286,6 @@
   </div>
 </div>
 
-<!-- HAIR ROUTINE PAGE -->
 <div id="page-hair-routine" class="page">
   <div class="section-wrap">
     <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
@@ -350,7 +328,7 @@
         <option selected>Under $20</option>
         <option>Under $30</option>
         <option>$30–$50</option>
-        <option>No limit — just what works</option>
+        <option>No limit</option>
       </select>
     </div>
 
@@ -364,7 +342,6 @@
   </div>
 </div>
 
-<!-- SKIN ROUTINE PAGE -->
 <div id="page-skin-routine" class="page">
   <div class="section-wrap">
     <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
@@ -404,7 +381,7 @@
         <option selected>Under $20</option>
         <option>Under $30</option>
         <option>$30–$50</option>
-        <option>No limit — just what works</option>
+        <option>No limit</option>
       </select>
     </div>
 
@@ -426,32 +403,21 @@
 </footer>
 
 <script>
-  // ── STATE ──
   let currentUser = null;
 
-  // ── NAVIGATION ──
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + pageId).classList.add('active');
     window.scrollTo(0, 0);
   }
 
-// ADD THIS ↓
-function showPage(pageId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + pageId).classList.add('active');
-  window.scrollTo(0, 0);
-}
-// ↑ ADD THIS
-
-// EXISTING CODE ↓
-function goHome() {
-  if (currentUser) {
-    showPage('dashboard');
-  } else {
-    showPage('home');
+  function goHome() {
+    if (currentUser) {
+      showPage('dashboard');
+    } else {
+      showPage('home');
+    }
   }
-}
 
   function updateNav() {
     const nav = document.getElementById('nav-buttons');
@@ -468,7 +434,6 @@ function goHome() {
     }
   }
 
-  // ── CHIP TOGGLE ──
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => chip.classList.toggle('active'));
   });
@@ -486,16 +451,9 @@ function goHome() {
   function clearError(id) {
     document.getElementById(id).style.display = 'none';
   }
-  function showSuccess(id, msg) {
-    const el = document.getElementById(id);
-    el.textContent = msg;
-    el.style.display = 'block';
-  }
 
-  // ── SIGN UP ──
   async function handleSignUp() {
     clearError('signup-error');
-    document.getElementById('signup-success').style.display = 'none';
 
     const name = document.getElementById('signup-name').value.trim();
     const age = document.getElementById('signup-age').value.trim();
@@ -510,7 +468,6 @@ function goHome() {
 
     const btn = document.querySelector('#page-signup .btn-submit');
     btn.disabled = true;
-    btn.textContent = 'Creating your account…';
 
     try {
       const res = await fetch('/signup', {
@@ -521,17 +478,15 @@ function goHome() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || 'Signup failed');
 
-      showSuccess('signup-success', '✅ Account created! Please check your email to confirm, then sign in.');
-      btn.textContent = 'Create My Account';
-      btn.disabled = false;
+      showError('signup-error', '✅ Account created! Please sign in.');
+      setTimeout(() => showPage('signin'), 1500);
     } catch (err) {
       showError('signup-error', err.message);
-      btn.textContent = 'Create My Account';
+    } finally {
       btn.disabled = false;
     }
   }
 
-  // ── SIGN IN ──
   async function handleSignIn() {
     clearError('signin-error');
     const email = document.getElementById('signin-email').value.trim();
@@ -542,7 +497,6 @@ function goHome() {
 
     const btn = document.querySelector('#page-signin .btn-submit');
     btn.disabled = true;
-    btn.textContent = 'Signing in…';
 
     try {
       const res = await fetch('/signin', {
@@ -561,88 +515,33 @@ function goHome() {
       showError('signin-error', err.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Sign In';
     }
   }
 
-  // ── SIGN OUT ──
   function handleSignOut() {
     currentUser = null;
     updateNav();
     showPage('home');
   }
 
-  <!-- PHOTO UPLOAD SECTION -->
-<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
-  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
-  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your hair for AI analysis. We'll examine your current condition and create a routine based on what we see.</p>
- 
-  <div class="form-group">
-    <input type="file" id="hair-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
-  </div>
-  <div class="error-msg" id="hair-photo-error"></div>
-  <div id="hair-photo-preview" style="margin-top:12px;"></div>
-</div>
+  async function getHairRoutine() {
+    clearError('hair-error');
+    const hair_type = document.getElementById('hair-type').value;
+    const hair_concerns = getSelected('hair-concerns');
+    const budget = document.getElementById('hair-budget').value;
 
+    if (!hair_concerns.length)
+      return showError('hair-error', 'Please select at least one hair concern.');
 
-async function getHairRoutine() {
-  clearError('hair-error');
-  const hair_type = document.getElementById('hair-type').value;
-  const hair_concerns = getSelected('hair-concerns');
-  const budget = document.getElementById('hair-budget').value;
-  const photoInput = document.getElementById('hair-photo');
+    const btn = document.querySelector('#page-hair-routine .btn-submit');
+    const spinner = document.getElementById('hair-spinner');
+    const resultBox = document.getElementById('hair-result');
 
-  if (!hair_concerns.length)
-    return showError('hair-error', 'Please select at least one hair concern.');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    resultBox.style.display = 'none';
 
-  const btn = document.querySelector('#page-hair-routine .btn-submit');
-  const spinner = document.getElementById('hair-spinner');
-  const resultBox = document.getElementById('hair-result');
-
-  btn.disabled = true;
-  spinner.style.display = 'block';
-  resultBox.style.display = 'none';
-
-  try {
-    let analysis = null;
-
-    // If photo uploaded, analyze it first
-    if (photoInput.files.length > 0) {
-      const file = photoInput.files[0];
-      const reader = new FileReader();
-     
-      reader.onload = async (e) => {
-        const base64 = e.target.result.split(',')[1];
-       
-        const photoRes = await fetch('/analyze-photo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo_base64: base64,
-            routine_type: 'hair',
-            hair_type,
-            hair_concerns: hair_concerns.join(', '),
-            skin_type: 'Not specified',
-            skin_concerns: 'Not specified',
-            budget
-          })
-        });
-
-        const photoData = await photoRes.json();
-        if (!photoData.success) {
-          showError('hair-error', 'Photo analysis failed. Try without photo.');
-          btn.disabled = false;
-          spinner.style.display = 'none';
-          return;
-        }
-
-        analysis = photoData.analysis;
-        displayHairResult(analysis);
-      };
-
-      reader.readAsDataURL(file);
-    } else {
-      // No photo - use regular recommendation
+    try {
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -657,95 +556,36 @@ async function getHairRoutine() {
         })
       });
       const data = await res.json();
-      displayHairResult(data.recommendation);
+      document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
+      document.getElementById('hair-result-content').textContent = data.recommendation;
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      showError('hair-error', 'Something went wrong. Please try again.');
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
     }
-
-  } catch (err) {
-    showError('hair-error', 'Something went wrong. Please try again.');
-  } finally {
-    btn.disabled = false;
-    spinner.style.display = 'none';
   }
-}
 
-function displayHairResult(text) {
-  const resultBox = document.getElementById('hair-result');
-  document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
-  document.getElementById('hair-result-content').textContent = text;
-  resultBox.style.display = 'block';
-  resultBox.scrollIntoView({ behavior: 'smooth' });
-}
+  async function getSkinRoutine() {
+    clearError('skin-error');
+    const skin_type = document.getElementById('skin-type').value;
+    const skin_concerns = getSelected('skin-concerns');
+    const budget = document.getElementById('skin-budget').value;
 
-<!-- PHOTO UPLOAD SECTION -->
-<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
-  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
-  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your skin for AI analysis. We'll examine your current condition and create a routine based on what we see.</p>
- 
-  <div class="form-group">
-    <input type="file" id="skin-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
-  </div>
-  <div class="error-msg" id="skin-photo-error"></div>
-  <div id="skin-photo-preview" style="margin-top:12px;"></div>
-</div>
+    if (!skin_concerns.length)
+      return showError('skin-error', 'Please select at least one skin concern.');
 
- async function getSkinRoutine() {
-  clearError('skin-error');
-  const skin_type = document.getElementById('skin-type').value;
-  const skin_concerns = getSelected('skin-concerns');
-  const budget = document.getElementById('skin-budget').value;
-  const photoInput = document.getElementById('skin-photo');
+    const btn = document.querySelector('#page-skin-routine .btn-submit');
+    const spinner = document.getElementById('skin-spinner');
+    const resultBox = document.getElementById('skin-result');
 
-  if (!skin_concerns.length)
-    return showError('skin-error', 'Please select at least one skin concern.');
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    resultBox.style.display = 'none';
 
-  const btn = document.querySelector('#page-skin-routine .btn-submit');
-  const spinner = document.getElementById('skin-spinner');
-  const resultBox = document.getElementById('skin-result');
-
-  btn.disabled = true;
-  spinner.style.display = 'block';
-  resultBox.style.display = 'none';
-
-  try {
-    let analysis = null;
-
-    // If photo uploaded, analyze it first
-    if (photoInput.files.length > 0) {
-      const file = photoInput.files[0];
-      const reader = new FileReader();
-     
-      reader.onload = async (e) => {
-        const base64 = e.target.result.split(',')[1];
-       
-        const photoRes = await fetch('/analyze-photo', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            photo_base64: base64,
-            routine_type: 'skin',
-            hair_type: 'Not specified',
-            hair_concerns: 'Not specified',
-            skin_type,
-            skin_concerns: skin_concerns.join(', '),
-            budget
-          })
-        });
-
-        const photoData = await photoRes.json();
-        if (!photoData.success) {
-          showError('skin-error', 'Photo analysis failed. Try without photo.');
-          btn.disabled = false;
-          spinner.style.display = 'none';
-          return;
-        }
-
-        analysis = photoData.analysis;
-        displaySkinResult(analysis);
-      };
-
-      reader.readAsDataURL(file);
-    } else {
-      // No photo - use regular recommendation
+    try {
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -760,24 +600,17 @@ function displayHairResult(text) {
         })
       });
       const data = await res.json();
-      displaySkinResult(data.recommendation);
+      document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
+      document.getElementById('skin-result-content').textContent = data.recommendation;
+      resultBox.style.display = 'block';
+      resultBox.scrollIntoView({ behavior: 'smooth' });
+    } catch (err) {
+      showError('skin-error', 'Something went wrong. Please try again.');
+    } finally {
+      btn.disabled = false;
+      spinner.style.display = 'none';
     }
-
-  } catch (err) {
-    showError('skin-error', 'Something went wrong. Please try again.');
-  } finally {
-    btn.disabled = false;
-    spinner.style.display = 'none';
   }
-}
-
-function displaySkinResult(text) {
-  const resultBox = document.getElementById('skin-result');
-  document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
-  document.getElementById('skin-result-content').textContent = text;
-  resultBox.style.display = 'block';
-  resultBox.scrollIntoView({ behavior: 'smooth' });
-}
 </script>
 </body>
 </html>
