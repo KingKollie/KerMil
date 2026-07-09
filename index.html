@@ -563,25 +563,77 @@
     showPage('home');
   }
 
-  // ── HAIR ROUTINE ──
-  async function getHairRoutine() {
-    clearError('hair-error');
-    const hair_type = document.getElementById('hair-type').value;
-    const hair_concerns = getSelected('hair-concerns');
-    const budget = document.getElementById('hair-budget').value;
+  <!-- PHOTO UPLOAD SECTION -->
+<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your hair for AI analysis. We'll examine your current condition and create a routine based on what we see.</p>
+ 
+  <div class="form-group">
+    <input type="file" id="hair-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
+  </div>
+  <div class="error-msg" id="hair-photo-error"></div>
+  <div id="hair-photo-preview" style="margin-top:12px;"></div>
+</div>
 
-    if (!hair_concerns.length)
-      return showError('hair-error', 'Please select at least one hair concern.');
 
-    const btn = document.querySelector('#page-hair-routine .btn-submit');
-    const spinner = document.getElementById('hair-spinner');
-    const resultBox = document.getElementById('hair-result');
+async function getHairRoutine() {
+  clearError('hair-error');
+  const hair_type = document.getElementById('hair-type').value;
+  const hair_concerns = getSelected('hair-concerns');
+  const budget = document.getElementById('hair-budget').value;
+  const photoInput = document.getElementById('hair-photo');
 
-    btn.disabled = true;
-    spinner.style.display = 'block';
-    resultBox.style.display = 'none';
+  if (!hair_concerns.length)
+    return showError('hair-error', 'Please select at least one hair concern.');
 
-    try {
+  const btn = document.querySelector('#page-hair-routine .btn-submit');
+  const spinner = document.getElementById('hair-spinner');
+  const resultBox = document.getElementById('hair-result');
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  try {
+    let analysis = null;
+
+    // If photo uploaded, analyze it first
+    if (photoInput.files.length > 0) {
+      const file = photoInput.files[0];
+      const reader = new FileReader();
+     
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(',')[1];
+       
+        const photoRes = await fetch('/analyze-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo_base64: base64,
+            routine_type: 'hair',
+            hair_type,
+            hair_concerns: hair_concerns.join(', '),
+            skin_type: 'Not specified',
+            skin_concerns: 'Not specified',
+            budget
+          })
+        });
+
+        const photoData = await photoRes.json();
+        if (!photoData.success) {
+          showError('hair-error', 'Photo analysis failed. Try without photo.');
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          return;
+        }
+
+        analysis = photoData.analysis;
+        displayHairResult(analysis);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      // No photo - use regular recommendation
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -596,37 +648,95 @@
         })
       });
       const data = await res.json();
-      document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
-      document.getElementById('hair-result-content').textContent = data.recommendation;
-      resultBox.style.display = 'block';
-      resultBox.scrollIntoView({ behavior: 'smooth' });
-    } catch (err) {
-      showError('hair-error', 'Something went wrong. Please try again.');
-    } finally {
-      btn.disabled = false;
-      spinner.style.display = 'none';
+      displayHairResult(data.recommendation);
     }
+
+  } catch (err) {
+    showError('hair-error', 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
   }
+}
 
-  // ── SKIN ROUTINE ──
-  async function getSkinRoutine() {
-    clearError('skin-error');
-    const skin_type = document.getElementById('skin-type').value;
-    const skin_concerns = getSelected('skin-concerns');
-    const budget = document.getElementById('skin-budget').value;
+function displayHairResult(text) {
+  const resultBox = document.getElementById('hair-result');
+  document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
+  document.getElementById('hair-result-content').textContent = text;
+  resultBox.style.display = 'block';
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+}
 
-    if (!skin_concerns.length)
-      return showError('skin-error', 'Please select at least one skin concern.');
+<!-- PHOTO UPLOAD SECTION -->
+<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your skin for AI analysis. We'll examine your current condition and create a routine based on what we see.</p>
+ 
+  <div class="form-group">
+    <input type="file" id="skin-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
+  </div>
+  <div class="error-msg" id="skin-photo-error"></div>
+  <div id="skin-photo-preview" style="margin-top:12px;"></div>
+</div>
 
-    const btn = document.querySelector('#page-skin-routine .btn-submit');
-    const spinner = document.getElementById('skin-spinner');
-    const resultBox = document.getElementById('skin-result');
+ async function getSkinRoutine() {
+  clearError('skin-error');
+  const skin_type = document.getElementById('skin-type').value;
+  const skin_concerns = getSelected('skin-concerns');
+  const budget = document.getElementById('skin-budget').value;
+  const photoInput = document.getElementById('skin-photo');
 
-    btn.disabled = true;
-    spinner.style.display = 'block';
-    resultBox.style.display = 'none';
+  if (!skin_concerns.length)
+    return showError('skin-error', 'Please select at least one skin concern.');
 
-    try {
+  const btn = document.querySelector('#page-skin-routine .btn-submit');
+  const spinner = document.getElementById('skin-spinner');
+  const resultBox = document.getElementById('skin-result');
+
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  resultBox.style.display = 'none';
+
+  try {
+    let analysis = null;
+
+    // If photo uploaded, analyze it first
+    if (photoInput.files.length > 0) {
+      const file = photoInput.files[0];
+      const reader = new FileReader();
+     
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(',')[1];
+       
+        const photoRes = await fetch('/analyze-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo_base64: base64,
+            routine_type: 'skin',
+            hair_type: 'Not specified',
+            hair_concerns: 'Not specified',
+            skin_type,
+            skin_concerns: skin_concerns.join(', '),
+            budget
+          })
+        });
+
+        const photoData = await photoRes.json();
+        if (!photoData.success) {
+          showError('skin-error', 'Photo analysis failed. Try without photo.');
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          return;
+        }
+
+        analysis = photoData.analysis;
+        displaySkinResult(analysis);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      // No photo - use regular recommendation
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -641,17 +751,24 @@
         })
       });
       const data = await res.json();
-      document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
-      document.getElementById('skin-result-content').textContent = data.recommendation;
-      resultBox.style.display = 'block';
-      resultBox.scrollIntoView({ behavior: 'smooth' });
-    } catch (err) {
-      showError('skin-error', 'Something went wrong. Please try again.');
-    } finally {
-      btn.disabled = false;
-      spinner.style.display = 'none';
+      displaySkinResult(data.recommendation);
     }
+
+  } catch (err) {
+    showError('skin-error', 'Something went wrong. Please try again.');
+  } finally {
+    btn.disabled = false;
+    spinner.style.display = 'none';
   }
+}
+
+function displaySkinResult(text) {
+  const resultBox = document.getElementById('skin-result');
+  document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
+  document.getElementById('skin-result-content').textContent = text;
+  resultBox.style.display = 'block';
+  resultBox.scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
