@@ -436,13 +436,22 @@
     window.scrollTo(0, 0);
   }
 
-  function goHome() {
-    if (currentUser) {
-      showPage('dashboard');
-    } else {
-      showPage('home');
-    }
+// ADD THIS ↓
+function showPage(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  window.scrollTo(0, 0);
+}
+// ↑ ADD THIS
+
+// EXISTING CODE ↓
+function goHome() {
+  if (currentUser) {
+    showPage('dashboard');
+  } else {
+    showPage('home');
   }
+}
 
   function updateNav() {
     const nav = document.getElementById('nav-buttons');
