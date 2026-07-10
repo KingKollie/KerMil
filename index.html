@@ -289,6 +289,16 @@
 <div id="page-hair-routine" class="page">
   <div class="section-wrap">
     <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
+
+    <!-- PHOTO UPLOAD -->
+<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your hair for AI analysis. Claude will examine your condition and create a routine just for you.</p>
+  <div class="form-group">
+    <input type="file" id="hair-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
+  </div>
+</div>
+
     <h2>💇🏾‍♀️ Hair Routine Builder</h2>
     <p class="sub">Tell us about your hair and we'll build your personalized routine.</p>
 
@@ -345,6 +355,16 @@
 <div id="page-skin-routine" class="page">
   <div class="section-wrap">
     <button class="back-btn" onclick="showPage('dashboard')">← Back to Dashboard</button>
+
+    <!-- PHOTO UPLOAD -->
+<div style="background: rgba(201,168,76,0.1); border: 1px solid rgba(201,168,76,0.25); border-radius: 20px; padding: 28px; margin-bottom: 32px;">
+  <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:12px;color:var(--gold);">📸 Upload a Photo (Optional)</h3>
+  <p style="color:var(--muted);font-size:0.9rem;margin-bottom:16px;">Upload a photo of your skin for AI analysis. Claude will examine your condition and create a routine just for you.</p>
+  <div class="form-group">
+    <input type="file" id="skin-photo" accept="image/*" style="padding:10px;cursor:pointer;"/>
+  </div>
+</div>
+
     <h2>🧴 Skin Routine Builder</h2>
     <p class="sub">Tell us about your skin and we'll build your personalized routine.</p>
 
@@ -487,61 +507,64 @@
     }
   }
 
-  async function handleSignIn() {
-    clearError('signin-error');
-    const email = document.getElementById('signin-email').value.trim();
-    const password = document.getElementById('signin-password').value;
-
-    if (!email || !password)
-      return showError('signin-error', 'Please enter your email and password.');
-
-    const btn = document.querySelector('#page-signin .btn-submit');
-    btn.disabled = true;
-
-    try {
-      const res = await fetch('/signin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || 'Sign in failed');
-
-      currentUser = { name: data.name, user_id: data.user_id };
-      updateNav();
-      document.getElementById('welcome-name').textContent = `Welcome back, ${data.name}! 👑`;
-      showPage('dashboard');
-    } catch (err) {
-      showError('signin-error', err.message);
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
-  function handleSignOut() {
-    currentUser = null;
-    updateNav();
-    showPage('home');
-  }
-
   async function getHairRoutine() {
-    clearError('hair-error');
-    const hair_type = document.getElementById('hair-type').value;
-    const hair_concerns = getSelected('hair-concerns');
-    const budget = document.getElementById('hair-budget').value;
+  clearError('hair-error');
+  const hair_type = document.getElementById('hair-type').value;
+  const hair_concerns = getSelected('hair-concerns');
+  const budget = document.getElementById('hair-budget').value;
+  const photoInput = document.getElementById('hair-photo');
 
-    if (!hair_concerns.length)
-      return showError('hair-error', 'Please select at least one hair concern.');
+  if (!hair_concerns.length)
+    return showError('hair-error', 'Please select at least one hair concern.');
 
-    const btn = document.querySelector('#page-hair-routine .btn-submit');
-    const spinner = document.getElementById('hair-spinner');
-    const resultBox = document.getElementById('hair-result');
+  const btn = document.querySelector('#page-hair-routine .btn-submit');
+  const spinner = document.getElementById('hair-spinner');
+  const resultBox = document.getElementById('hair-result');
 
-    btn.disabled = true;
-    spinner.style.display = 'block';
-    resultBox.style.display = 'none';
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  resultBox.style.display = 'none';
 
-    try {
+  try {
+    if (photoInput.files.length > 0) {
+      const file = photoInput.files[0];
+      const reader = new FileReader();
+     
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(',')[1];
+       
+        const photoRes = await fetch('/analyze-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo_base64: base64,
+            routine_type: 'hair',
+            hair_type,
+            hair_concerns: hair_concerns.join(', '),
+            skin_type: 'Not specified',
+            skin_concerns: 'Not specified',
+            budget
+          })
+        });
+
+        const photoData = await photoRes.json();
+        if (!photoData.success) {
+          showError('hair-error', 'Photo analysis failed. Try without photo.');
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          return;
+        }
+
+        document.getElementById('hair-result-title').textContent = `${currentUser?.name}'s Hair Routine ✨`;
+        document.getElementById('hair-result-content').textContent = photoData.analysis;
+        resultBox.style.display = 'block';
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+        btn.disabled = false;
+        spinner.style.display = 'none';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -560,32 +583,74 @@
       document.getElementById('hair-result-content').textContent = data.recommendation;
       resultBox.style.display = 'block';
       resultBox.scrollIntoView({ behavior: 'smooth' });
-    } catch (err) {
-      showError('hair-error', 'Something went wrong. Please try again.');
-    } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
     }
+  } catch (err) {
+    showError('hair-error', 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    spinner.style.display = 'none';
   }
+}
 
-  async function getSkinRoutine() {
-    clearError('skin-error');
-    const skin_type = document.getElementById('skin-type').value;
-    const skin_concerns = getSelected('skin-concerns');
-    const budget = document.getElementById('skin-budget').value;
+async function getSkinRoutine() {
+  clearError('skin-error');
+  const skin_type = document.getElementById('skin-type').value;
+  const skin_concerns = getSelected('skin-concerns');
+  const budget = document.getElementById('skin-budget').value;
+  const photoInput = document.getElementById('skin-photo');
 
-    if (!skin_concerns.length)
-      return showError('skin-error', 'Please select at least one skin concern.');
+  if (!skin_concerns.length)
+    return showError('skin-error', 'Please select at least one skin concern.');
 
-    const btn = document.querySelector('#page-skin-routine .btn-submit');
-    const spinner = document.getElementById('skin-spinner');
-    const resultBox = document.getElementById('skin-result');
+  const btn = document.querySelector('#page-skin-routine .btn-submit');
+  const spinner = document.getElementById('skin-spinner');
+  const resultBox = document.getElementById('skin-result');
 
-    btn.disabled = true;
-    spinner.style.display = 'block';
-    resultBox.style.display = 'none';
+  btn.disabled = true;
+  spinner.style.display = 'block';
+  resultBox.style.display = 'none';
 
-    try {
+  try {
+    if (photoInput.files.length > 0) {
+      const file = photoInput.files[0];
+      const reader = new FileReader();
+     
+      reader.onload = async (e) => {
+        const base64 = e.target.result.split(',')[1];
+       
+        const photoRes = await fetch('/analyze-photo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            photo_base64: base64,
+            routine_type: 'skin',
+            hair_type: 'Not specified',
+            hair_concerns: 'Not specified',
+            skin_type,
+            skin_concerns: skin_concerns.join(', '),
+            budget
+          })
+        });
+
+        const photoData = await photoRes.json();
+        if (!photoData.success) {
+          showError('skin-error', 'Photo analysis failed. Try without photo.');
+          btn.disabled = false;
+          spinner.style.display = 'none';
+          return;
+        }
+
+        document.getElementById('skin-result-title').textContent = `${currentUser?.name}'s Skin Routine ✨`;
+        document.getElementById('skin-result-content').textContent = photoData.analysis;
+        resultBox.style.display = 'block';
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+        btn.disabled = false;
+        spinner.style.display = 'none';
+      };
+
+      reader.readAsDataURL(file);
+    } else {
       const res = await fetch('/recommend', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -604,13 +669,17 @@
       document.getElementById('skin-result-content').textContent = data.recommendation;
       resultBox.style.display = 'block';
       resultBox.scrollIntoView({ behavior: 'smooth' });
-    } catch (err) {
-      showError('skin-error', 'Something went wrong. Please try again.');
-    } finally {
       btn.disabled = false;
       spinner.style.display = 'none';
     }
+  } catch (err) {
+    showError('skin-error', 'Something went wrong. Please try again.');
+    btn.disabled = false;
+    spinner.style.display = 'none';
   }
+}
+
+
 </script>
 </body>
 </html>
