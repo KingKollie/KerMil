@@ -24,7 +24,7 @@ def sign_up(name, age, email, phone_number, password):
         data = res.json()
 
         # Return full respone so we can see what supabase is sending
-        return {"success": False, "error": str(data)}
+        
     except Exception as e:
         return{"success": False, "error": str(e)}
 
