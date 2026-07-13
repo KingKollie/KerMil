@@ -24,7 +24,8 @@ def sign_up(name, age, email, phone_number, password):
         )
         
         data = res.json()
-        print(f"DEBUG: supabase response: {data}")
+        print(f"DEBUG: Full data keys: {data.key()}")
+        print(f"DEBUG: full data: {data}")
         user_id = data["user"]["id"]
 
         # Save profile
