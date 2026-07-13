@@ -15,12 +15,14 @@ HEADERS = {
 
 def sign_up(name, age, email, phone_number, password):
     try:
+        print(f"DEBUG: sign_up called with email={email}")
         # Create auth user
         res = httpx.post(
             f"{SUPABASE_URL}/auth/v1/signup",
             headers=HEADERS,
             json={"email": email, "password": password}
         )
+        print(f"DEBUG: supabase response: {data}")
         data = res.json()
 
         # Save profile
