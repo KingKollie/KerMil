@@ -25,6 +25,7 @@ def sign_up(name, age, email, phone_number, password):
         
         data = res.json()
         print(f"DEBUG: supabase response: {data}")
+        user_id = data["user"]["id"]
 
         # Save profile
         httpx.post(
