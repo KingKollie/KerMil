@@ -44,7 +44,7 @@ class SignUpRequest(BaseModel):
 class SignInRequest(BaseModel):
     email: str
     password: str
-
+    
 # ── AUTH ENDPOINTS ──
 @app.post("/signup")
 def signup(request: SignUpRequest):
@@ -160,6 +160,5 @@ Focus on products that work well for Black skin and are budget-friendly (under $
    
     except Exception as e:
         return {"success": False, "error": str(e)}
-    
 
 app.mount("/", StaticFiles(directory=".", html=True), name="static")
