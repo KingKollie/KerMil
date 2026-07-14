@@ -22,7 +22,7 @@ def sign_up(name, age, email, phone_number, password):
             headers=HEADERS,
             json={"email": email, "password": password}
         )
-        print (f"DEBUG: signup response status: {res.status_code}")
+        print(f"DEBUG: signup response status: {res.status_code}")
     except Exception as e:
         print(f"DEBUG: signup prd field:{str(e)}")
         
