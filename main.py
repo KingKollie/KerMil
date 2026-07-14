@@ -127,7 +127,7 @@ Focus on products that work well for Black skin and are budget-friendly (under $
        
         # Call Claude Vision with the image
         response = client.messages.create(
-            model="claude-opus-4-6",
+            model="claude-sonnet-4-6",
             max_tokens=2000,
             messages=[
                 {
