@@ -30,7 +30,7 @@
     }
     .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--gold); cursor: pointer; }
     .logo span { color: var(--blush); font-style: italic; }
-    .nav-buttons { display: flex; gap: 12px; }
+    .nav-buttons { display: flex; gap: 12px; align-items: center; }
     .btn-nav {
       padding: 10px 22px; border-radius: 50px; font-size: 0.85rem;
       font-family: 'DM Sans', sans-serif; cursor: pointer; font-weight: 500;
@@ -425,6 +425,18 @@
 <script>
   let currentUser = null;
 
+  // Restore session on page load, if we saved one earlier
+  (function restoreSession() {
+    try {
+      const saved = localStorage.getItem('kermil_user');
+      if (saved) {
+        currentUser = JSON.parse(saved);
+      }
+    } catch (e) {
+      currentUser = null;
+    }
+  })();
+
   function showPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-' + pageId).classList.add('active');
@@ -452,6 +464,20 @@
         <button class="btn-nav primary" onclick="showPage('signup')">Sign Up</button>
       `;
     }
+  }
+
+  function handleSignOut() {
+    currentUser = null;
+    localStorage.removeItem('kermil_user');
+    updateNav();
+    showPage('home');
+  }
+
+  // If we restored a session on load, reflect it in the nav + dashboard immediately
+  if (currentUser) {
+    updateNav();
+    const welcomeEl = document.getElementById('welcome-name');
+    if (welcomeEl) welcomeEl.textContent = `Welcome back, ${currentUser.name}! 👑`;
   }
 
   document.querySelectorAll('.chip').forEach(chip => {
@@ -502,6 +528,44 @@
       setTimeout(() => showPage('signin'), 1500);
     } catch (err) {
       showError('signup-error', err.message);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function handleSignIn() {
+    clearError('signin-error');
+
+    const email = document.getElementById('signin-email').value.trim();
+    const password = document.getElementById('signin-password').value;
+
+    if (!email || !password)
+      return showError('signin-error', 'Please fill in all fields.');
+
+    const btn = document.querySelector('#page-signin .btn-submit');
+    btn.disabled = true;
+
+    try {
+      const res = await fetch('/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Sign in failed');
+
+      currentUser = {
+        name: data.name,
+        user_id: data.user_id,
+        access_token: data.access_token
+      };
+      localStorage.setItem('kermil_user', JSON.stringify(currentUser));
+
+      updateNav();
+      document.getElementById('welcome-name').textContent = `Welcome back, ${data.name}! 👑`;
+      showPage('dashboard');
+    } catch (err) {
+      showError('signin-error', err.message);
     } finally {
       btn.disabled = false;
     }
@@ -678,7 +742,6 @@ async function getSkinRoutine() {
     spinner.style.display = 'none';
   }
 }
-
 
 </script>
 </body>
